@@ -14,6 +14,15 @@
 
 @implementation DrawingWindowController
 
+
+- (id)init {
+    if (self = [super initWithWindowNibName:@"DocumentWindow"]) {
+
+    }
+    return self;
+}
+
+
 - (id)initWithWindow:(NSWindow *)window
 {
     self = [super initWithWindow:window];
