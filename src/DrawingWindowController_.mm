@@ -9,23 +9,36 @@
 //  License & disclaimer >> see license.txt file included in the distribution package
 //
 
-#import "MyController.h"
+#import "DrawingWindowController.h"
+#import "GLWindowController.h"
 
 
-@implementation MyController
+@implementation DrawingWindowController
 
 - (IBAction) listenToCubeSizeSlider: (NSSlider*) sender
 {
 	int value = [sender intValue];
 	//[CinderDrawing setCubeSize:value];
     //[CinderDrawing setNeedsDisplay:YES]; // to show effect right away while sliding
+    glControllerWindow = nil;
 }
 
 - (IBAction) runButtonListener: (id) sender
 {
     NSLog(@"CLICKED!");
-    //GLWindowController *controllerWindow = [[GLWindowController alloc] initWithWindowNibName:@"You Window XIB Name"];
-    //[controllerWindow showWindow:self];
+    if(glControllerWindow != nil){
+        [glControllerWindow release];
+    }
+    glControllerWindow = [[GLWindowController alloc] initWithWindowNibName:@"GLWindow"];
+    [glControllerWindow showWindow:self];
+}
+
+- (IBAction) stopButtonListener: (id) sender
+{
+    if(glControllerWindow != nil){
+        [glControllerWindow release];
+        glControllerWindow = nil;
+    }
 }
 
 @end

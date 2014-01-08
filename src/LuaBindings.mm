@@ -92,7 +92,15 @@ namespace CinderAppLua{
     static double getElapsedSeconds(){
         return ::CFAbsoluteTimeGetCurrent() - startTime;
     }
+    static void console_print(std::string& m){
+        //redirect our lua print to app's console here.
+    }
 }
+
+//class b{
+//public:
+//    void func();
+//};
 
 void luabindings::add_to_state(lua_State* L){
     /*
@@ -103,6 +111,10 @@ void luabindings::add_to_state(lua_State* L){
      - point
      
      */
+//    b b_inst;
+//    luabridge::getGlobalNamespace(L)
+//    .getGlobalNamespace(L)
+//    .addFunction("B", &b_inst.*func);
     
     CinderAppLua::startTime = ::CFAbsoluteTimeGetCurrent();
     

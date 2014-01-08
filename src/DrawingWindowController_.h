@@ -11,15 +11,20 @@
 
 #import <Cocoa/Cocoa.h>
 #import "MyCCGLDrawing.h"
+#import "GLWindowController.h"
 
 
-@interface MyController : NSObject {
+@interface DrawingWindowController : NSObject {
+    @private
     IBOutlet NSButton* stopButton;
     IBOutlet NSButton* runButton;
     IBOutlet NSTextView* codeTextView;
+    
+    GLWindowController* glControllerWindow;
 }
 
 
 - (IBAction) runButtonListener: (id) sender;
+- (IBAction) stopButtonListener: (id) sender;
 
 @end
