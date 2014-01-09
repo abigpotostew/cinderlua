@@ -4,7 +4,9 @@
 audio = nil -- in global namespace so interactive prompt can safely interact with it.
 
 function setup()
-    --window.size(640,360)
+  window.size(640,360)
+    print(window)
+    print(window.width..", "..window.height)
   --audio = Audio()
   --audio:loadTrack("/Users/stew/Documents/Code/Cinder/MetatronsGroove/resources/Jamelia_DJ-Kozes-Alarmclock.mp3")
   --print(audio)
@@ -16,7 +18,7 @@ end
 vars={}
 vars.rotate_offset = 0
 vars.rings = 60
-vars.radius = math.max(window.width, window.height)/3
+vars.radius = 75
 vars.r_div = 1
 print("[Lua] hello objc")
 
@@ -38,7 +40,7 @@ function draw()
         prevtime = time.seconds()
         --print("YO ".. prevtime)
     end
-    
+    gl.solidCircle(0,0,100)
 end
 
 

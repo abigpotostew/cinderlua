@@ -1,5 +1,5 @@
 //
-//  MyCCGLDrawing.mm
+//  DrawingView.mm
 //  CCGLBasic example
 //
 //  Created by Matthieu Savary on 03/03/11.
@@ -10,14 +10,14 @@
 //
 
 
-#import "MyCCGLDrawing.h"
+#import "DrawingView.h"
 
 #include "LuaBridge.h"
 #include "LuaBindings.h"
 
 #include "Resources.h"
 
-@implementation MyCCGLDrawing
+@implementation DrawingView
 
 /**
  *  The setup method
@@ -27,26 +27,34 @@
 {
 	[super setup];
 	
-    //recieve lua text file
+    // Recieve lua text file
 	string lua_path = [super getResourcePath:RES_MAIN_LUA];
     L = luaMan.loadLuaFile(lua_path.c_str());
     
+    // Add all my class and namespace bindings.
     luabindings::add_to_state(L);
+    
+    //Each lua state keeps track of it's window
+    luabridge::push( L, luabindings::LuaWindow( 300, 300 ) );
+    lua_setglobal( L, "window" );
+    //TODO: Make this window table immutable in lua by changing it's metamethods
     
     // Execute lua files in order
     luaMan.run();
     
-    
     luabridge::LuaRef setup = luabridge::getGlobal(L,"setup");
     try{
         setup();
-        //console()<<"[C++] Called Lua setup()."<<endl;
     }catch(luabridge::LuaException const& e){
         //console()<<"[C++] No Lua setup() function defined, skipping." <<endl;
     }
     
     //lua_prompt_thread = std::thread(&MetatronsGrooveApp::lua_prompt,this);
     
+    luabridge::LuaRef window = luabridge::getGlobal(L, "window");
+    int w = [self getWidth];
+    
+    //clear black to avoid artifacts.
     gl::clear();
 }
 
@@ -69,7 +77,16 @@
 }
 
 
-
+-(int) getWidth
+{
+    luabridge::LuaRef window = luabridge::getGlobal(L, "window");
+    return window["width"];
+}
+-(int) getHeight;
+{
+    luabridge::LuaRef window = luabridge::getGlobal(L, "window");
+    return window["height"];
+}
 
 /**
  *  Cocoa UI methods
@@ -110,5 +127,19 @@ void exit(){
     //lua_prompt_thread.join();
     //quit();
 }
+
+-(void)close_state
+{
+    //lua_close(L);
+    //NSLog(@"closing state");
+}
+
+-(void) dealloc
+{
+    //[self close_state];
+    [super dealloc];
+}
+
+
 
 @end

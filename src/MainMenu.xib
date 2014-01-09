@@ -60,10 +60,14 @@
                         <items>
                             <menuItem title="New" keyEquivalent="n" id="82">
                                 <connections>
-                                    <action selector="newDocument:" target="-1" id="lFA-iG-sfE"/>
+                                    <action selector="newDocument:" target="-1" id="O1l-Nb-Jds"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Open…" keyEquivalent="o" id="72"/>
+                            <menuItem title="Open…" keyEquivalent="o" id="72">
+                                <connections>
+                                    <action selector="openDocument:" target="-1" id="89B-tX-7Hg"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Open Recent" id="124">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Open Recent" systemMenu="recentDocuments" id="125">
@@ -103,7 +107,7 @@
                             </menuItem>
                             <menuItem title="Print…" keyEquivalent="p" id="78">
                                 <connections>
-                                    <action selector="print:" target="-1" id="86"/>
+                                    <action selector="print:" target="-1" id="SdJ-lK-977"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -649,6 +653,5 @@
             </items>
         </menu>
         <customObject id="371" customClass="NSFontManager"/>
-        <customObject id="UpX-Kw-m0Q" customClass="DrawingController"/>
     </objects>
 </document>

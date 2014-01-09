@@ -1,5 +1,5 @@
 //
-//  MyCCGLDrawing.h
+//  DrawingView.h
 //  CCGLBasic example
 //
 //  Created by Matthieu Savary on 03/03/11.
@@ -9,8 +9,8 @@
 //  License & disclaimer >> see license.txt file included in the distribution package
 //
 
-#ifndef MyCCGLDrawing__h
-#define MyCCGLDrawing__h
+#ifndef DrawingView__h
+#define DrawingView__h
 
 #include "CCGLView.h"
 
@@ -19,13 +19,18 @@
 #include "LuaManager.h"
 #include "lua.hpp"
 
-@interface MyCCGLDrawing : CCGLView
+@interface DrawingView : CCGLView
 {
 	LuaManager luaMan;
     lua_State* L;
     //std::thread lua_prompt_thread;
     //bool exiting;
 }
+
+-(void)close_state;
+
+-(int) getWidth;
+-(int) getHeight;
 
 /**
  *  Cocoa UI methods

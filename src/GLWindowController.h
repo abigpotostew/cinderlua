@@ -7,9 +7,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "MyCCGLDrawing.h"
+#import "DrawingView.h"
 
-@interface GLWindowController : NSWindowController{
-    IBOutlet MyCCGLDrawing *CinderDrawing;
+@interface GLWindowController : NSWindowController
+{
+    IBOutlet DrawingView *CinderDrawingView;
 }
 @end

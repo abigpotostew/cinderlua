@@ -81,8 +81,8 @@ namespace Draw3DLua{
 };
 
 namespace CinderAppLua{
-    static int width = 100,
-    height = 100;
+    static int width = 200,
+    height = 200;
     static double startTime;
     static void size(int _width, int _height){
         width = _width;
@@ -97,33 +97,26 @@ namespace CinderAppLua{
     }
 }
 
+
+
 //class b{
 //public:
 //    void func();
 //};
 
 void luabindings::add_to_state(lua_State* L){
-    /*
-     TODO:
-     - texture
-     - shaders
-     - more drawing things
-     - point
-     
-     */
-//    b b_inst;
-//    luabridge::getGlobalNamespace(L)
-//    .getGlobalNamespace(L)
-//    .addFunction("B", &b_inst.*func);
     
     CinderAppLua::startTime = ::CFAbsoluteTimeGetCurrent();
     
     luabridge::getGlobalNamespace(L)
-    .beginNamespace("window")
-    .addVariable("width", &CinderAppLua::width)
-    .addVariable("height", &CinderAppLua::height)
-    .addFunction("size", &CinderAppLua::size)
-    .endNamespace();
+    .beginClass<LuaWindow>("window")
+        .addConstructor<void(*)(int, int)>()
+        .addProperty("width", &LuaWindow::width)
+        .addProperty("height", &LuaWindow::height)
+        .addFunction("size", &LuaWindow::size)
+    .endClass();
+    
+    //LuaRef v2 = getGlobal (L, "print")
     
     luabridge::getGlobalNamespace(L)
     .beginNamespace("time")

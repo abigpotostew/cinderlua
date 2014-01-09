@@ -7,8 +7,8 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="DrawingDocument">
             <connections>
-                <outlet property="runButton" destination="M7M-CT-lA2" id="dR4-pd-sfN"/>
-                <outlet property="stopButton" destination="koL-ne-rtk" id="uNl-hq-m7l"/>
+                <outlet property="runButton" destination="M7M-CT-lA2" id="2O1-ea-gVN"/>
+                <outlet property="stopButton" destination="koL-ne-rtk" id="d1x-vq-YIa"/>
                 <outlet property="window" destination="cbn-QE-tSv" id="eJT-p4-Pir"/>
             </connections>
         </customObject>
@@ -86,7 +86,7 @@
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="runButtonListener:" target="-2" id="oh5-jL-w39"/>
+                            <action selector="runButtonListener:" target="-2" id="OJ4-zg-DVo"/>
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="koL-ne-rtk">
@@ -97,7 +97,7 @@
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="stopButtonListener:" target="-2" id="Msd-LT-cSV"/>
+                            <action selector="stopButtonListener:" target="-2" id="FXr-Ka-TV7"/>
                         </connections>
                     </button>
                 </subviews>

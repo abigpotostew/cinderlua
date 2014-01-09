@@ -7,7 +7,6 @@
 //
 
 #import "DrawingDocument.h"
-#import "DrawingWindowController.h"
 
 @implementation DrawingDocument
 
@@ -20,13 +19,17 @@
     return self;
 }
 
--(void)makeWindowControllers
+-(void)dealloc
 {
-    NSArray *myControllers = [self windowControllers];
-    
-    if ([myControllers count] == 0) {
-        [self addWindowController:[[[DrawingWindowController allocWithZone:[self zone]] init] autorelease]];
-    }
+    [self closeGLWindow];
+    [super dealloc];
+}
+
+- (NSString *)windowNibName
+{
+    // Override returning the nib file name of the document
+    // If you need to use a subclass of NSWindowController or if your document supports multiple NSWindowControllers, you should remove this method and override -makeWindowControllers instead.
+    return @"DrawingWindow";
 }
 
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController
@@ -59,6 +62,31 @@
 + (BOOL)autosavesInPlace
 {
     return YES;
+}
+
+
+- (IBAction) runButtonListener: (id) sender
+{
+    //NSLog(@"CLICKED!");
+    if(glControllerWindow != nil){
+        [[glControllerWindow window]close];
+        [glControllerWindow release];
+    }
+    glControllerWindow = [[GLWindowController alloc] initWithWindowNibName:@"GLWindow"];
+    [glControllerWindow showWindow:self];
+}
+
+- (IBAction) stopButtonListener: (id) sender
+{
+    [self closeGLWindow];
+}
+
+- (void) closeGLWindow
+{
+    if(glControllerWindow != nil){
+        [glControllerWindow release];
+        glControllerWindow = nil;
+    }
 }
 
 @end
