@@ -7,10 +7,10 @@
 //
 
 #import "GLWindowController.h"
-//
-//@interface GLWindowController ()
-//
-//@end
+
+@interface GLWindowController ()
+
+@end
 
 @implementation GLWindowController
 
@@ -19,6 +19,7 @@
     self = [super initWithWindow:window];
     if (self) {
         // Initialization code here.
+        //NSLog(@"Creating new gl window");
     }
     return self;
 }
@@ -28,19 +29,30 @@
     [super windowDidLoad];
     
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib
-    //CinderDrawingView = [[ DrawingView alloc ] initWithFrame:NSMakeRect(0, 0, self.window.frame.size.width, self.window.frame.size.height)];
-    //[CinderDrawingView autorelease];
-    //[CinderDrawingView setWantsLayer:YES];
-    //[CinderDrawingView setCanDrawConcurrently:TRUE]; //?? untested
     
-    //[self.window.contentView addSubview:CinderDrawingView];
-    int newWidth = [self->CinderDrawingView getWidth];
-    int newHeight = [self->CinderDrawingView getHeight];
-    [self.window setFrame:NSMakeRect(0, 0, newWidth, newHeight) display:TRUE];
-    NSRect f = self->CinderDrawingView.frame;
+    // Get user specified window size
+    int newWidth = [self->cinderDrawingView getWidth];
+    int newHeight = [self->cinderDrawingView getHeight];
+    
+    // Resize window to user specified dimensions from lua.
+    NSRect windowFrame = [self.window frame];
+    [self.window setFrame:NSMakeRect(windowFrame.origin.x-newWidth/2, windowFrame.origin.y-newHeight/2, newWidth, newHeight) display:TRUE];
+    [self.window setMinSize:[self.window frame].size];
+    [self.window setMaxSize:[self.window frame].size];
+    
+    // Resize the drawing view
+    NSRect f = [self->cinderDrawingView frame];
     f.size.width = newWidth;
     f.size.height = newHeight;
-    self->CinderDrawingView.frame = f;
+    f.origin.x = 0; // bottom
+    f.origin.y = 0; // left
+    self->cinderDrawingView.frame = f;
+    
+    // Prevent window resizing.
+    [self.window setMinSize:[self.window frame].size];
+    [self.window setMaxSize:[self.window frame].size];
+    
+    [self showWindow:self];
 }
 
 @end

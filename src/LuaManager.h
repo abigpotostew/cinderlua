@@ -21,6 +21,8 @@ public:
     lua_State* loadLuaFile(const char* luaPath);
     int addTraceback(lua_State*);
     lua_State* run();
+    void close_state();
+
     
     int dostring(const std::string& s);
     int docall(int narg, int clear);

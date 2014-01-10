@@ -23,8 +23,7 @@ public:
     void size(int _w, int _h){
         _width = _w;
         _height = _h;
-    }
-};
+    }};
 
 
     void add_to_state(lua_State* L);

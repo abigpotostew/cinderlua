@@ -16,11 +16,19 @@
     IBOutlet NSButton* runButton;
     IBOutlet NSTextView* codeTextView;
     
-    GLWindowController* glControllerWindow;
+    IBOutlet NSWindow* gLWindow;
+    IBOutlet CinderDrawingView *cinderDrawingView;
+    
+    //GLWindowController* glControllerWindow;
+    
+    NSString* data_tmp;
 }
 
 
 - (IBAction) runButtonListener: (id) sender;
 - (IBAction) stopButtonListener: (id) sender;
+
+-(CGFloat) toolbarHeight;
+- (void)resizeToSize:(NSSize)newSize;
 
 @end

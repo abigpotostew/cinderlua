@@ -1,6 +1,6 @@
 //
 //  LuaManager.cpp
-//  MetatronsGroove
+//  Manages setting up lua states and error reporting.
 //
 //  Created by Stewart Bracken on 9/29/13.
 //
@@ -8,16 +8,7 @@
 
 #include "LuaManager.h"
 
-//#include <stdio.h>
-
-//#include "lua.hpp"
-//#ifndef LUABRIDGE_LUABRIDGE_HEADER
-//#include "LuaBridge.h"
-//#endif
-
 #include <iostream>
-
-//using namespace luabridge;
 
 static lua_State* globalL = 0;
 
@@ -28,7 +19,7 @@ LuaManager::LuaManager(){
 
 LuaManager::~LuaManager(){
     if(this->L)
-        lua_close(this->L);
+        close_state();
 }
 
 lua_State* LuaManager::loadLuaFile(const char* luaPath){
@@ -44,6 +35,7 @@ lua_State* LuaManager::loadLuaFile(const char* luaPath){
     return L;
 }
 
+// Convert a lua error code to a string
 int LuaManager::report(int status) {
     if (status && !lua_isnil(L, -1)) {
         const char *msg = lua_tostring(L, -1);
@@ -54,8 +46,8 @@ int LuaManager::report(int status) {
     return status;
 }
 
+// Run the entire lua script. Call this once after loading the script.
 lua_State* LuaManager::run(){
-    //run the entire script once.
     int status = lua_pcall(L, 0,0,0);
     if ( status != 0 ){
         //runtime error
@@ -67,9 +59,13 @@ lua_State* LuaManager::run(){
 }
 
 
+void LuaManager::close_state(){
+    lua_close(this->L);
+    L = NULL;
+}
+
 // traceback function, adapted from lua.c
 // when a runtime error occurs, this will append the call stack to the error message
-//
 static int traceback (lua_State* L_state)
 {
     // look up Lua's 'debug.traceback' function
@@ -91,6 +87,7 @@ static int traceback (lua_State* L_state)
     return LUA_ERRRUN;
 }
 
+// Error reporting for docall, used for interactive interpreter.
 static int prompt_traceback(lua_State* L){
     const char *msg = lua_tostring(L, 1);
     if (msg)
@@ -102,24 +99,28 @@ static int prompt_traceback(lua_State* L){
     return 1;
 }
 
+//
 int LuaManager::addTraceback (lua_State* lua_s)
 {
     lua_pushcfunction (lua_s, traceback);
     return luaL_ref (lua_s, LUA_REGISTRYINDEX);
 }
 
+// Error used in laction
 static void lstop (lua_State *L, lua_Debug *ar) {
     (void)ar;  /* unused arg. */
     lua_sethook(L, NULL, 0, 0);
     luaL_error(L, "interrupted!");
 }
 
+// Error used in docall
 static void laction (int i) {
     signal(i, SIG_DFL); /* if another SIGINT happens before lstop,
                          terminate process (default action) */
     lua_sethook(globalL, lstop, LUA_MASKCALL | LUA_MASKRET | LUA_MASKCOUNT, 1);
 }
 
+// Protected call for a chunk of lua code
 int LuaManager::docall(int narg, int nres){
     int status;
     int base = lua_gettop(L) - narg;  /* function index */
@@ -135,10 +136,12 @@ int LuaManager::docall(int narg, int nres){
     return status;
 }
 
+// Run a script. This is used for the interactive interpreter for sending short
+// lines of code.
 int LuaManager::dostring(const std::string& s){
-    //std::cout<<"Attempting to run: "<<s.c_str()<<std::endl;
     int status = luaL_loadbuffer(L, s.c_str(), s.length(), ">");
     if (status == LUA_OK) status = docall(0, 0);
     return report(status);
 }
+
 

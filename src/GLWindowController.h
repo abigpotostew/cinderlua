@@ -7,10 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "DrawingView.h"
+#import "CinderDrawingView.h"
 
 @interface GLWindowController : NSWindowController
 {
-    IBOutlet DrawingView *CinderDrawingView;
+    IBOutlet CinderDrawingView *cinderDrawingView;
 }
+
 @end

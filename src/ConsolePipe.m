@@ -44,7 +44,7 @@ static int myOwnWriter( void *inFD, const char *buffer, int size ){
     [p insertText:tmp];
     [p setEditable: FALSE];
     
-    //[tmp release ];
+    [tmp release ];
     return size ;
 }
 

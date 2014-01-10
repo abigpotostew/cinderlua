@@ -112,6 +112,10 @@ vector<float> Audio::getSpectrum()const{
 }
 
 int Audio::getSpectrumLua(lua_State* L){
+    if (!lua_checkstack(L, fft_smooth.size())){
+        throw LuaException(L, "Stack Overflow:", " Audio::getSpectrum(): Cannot increase stack size to fit spectrum table.", 1);
+    }
+    
     LuaRef t = newTable(L);
     for( int i=0; i<fft_smooth.size(); ++i ){
         t.append( fft_smooth[i] ); //array style table

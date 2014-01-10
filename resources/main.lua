@@ -4,9 +4,7 @@
 audio = nil -- in global namespace so interactive prompt can safely interact with it.
 
 function setup()
-  window.size(640,360)
-    print(window)
-    print(window.width..", "..window.height)
+    window:size(640,360)
   --audio = Audio()
   --audio:loadTrack("/Users/stew/Documents/Code/Cinder/MetatronsGroove/resources/Jamelia_DJ-Kozes-Alarmclock.mp3")
   --print(audio)
@@ -40,7 +38,7 @@ function draw()
         prevtime = time.seconds()
         --print("YO ".. prevtime)
     end
-    gl.solidCircle(0,0,100)
+
 end
 
 

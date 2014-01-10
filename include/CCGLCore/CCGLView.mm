@@ -106,7 +106,7 @@
 	//[self update];
     
 	if (!appSetupCalled) {
-		[self setup];
+		//[self setup];
 		return;
 	}
 	
@@ -552,6 +552,8 @@ ResourceLoadExc::ResourceLoadExc( const string &macPath )
 	NSString *resultPath = [[NSBundle mainBundle] pathForResource:[NSString stringWithUTF8String:fileName.c_str()] ofType:nil inDirectory:pathNS];
 	if( ! resultPath )
 		return string();
+    
+    //[resultPath autorelease];
 	
 	return string([resultPath cStringUsingEncoding:NSUTF8StringEncoding]);
 }

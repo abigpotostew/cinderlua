@@ -1,12 +1,17 @@
 //
 //  DrawingDocument.m
-//  CinderLua
+//  This si a  combination of the model and controller for a cinder lua doc.
 //
 //  Created by Stewart Bracken on 1/7/14.
 //
 //
 
 #import "DrawingDocument.h"
+
+//private methods
+@interface DrawingDocument ()
+-(void)removeCinderView;
+@end
 
 @implementation DrawingDocument
 
@@ -29,12 +34,22 @@
 {
     // Override returning the nib file name of the document
     // If you need to use a subclass of NSWindowController or if your document supports multiple NSWindowControllers, you should remove this method and override -makeWindowControllers instead.
-    return @"DrawingWindow";
+    return @"DrawingDocument";
 }
 
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController
 {
     [super windowControllerDidLoadNib:aController];
+    
+    //[aController setShouldCloseDocument: YES];
+    
+    if(!data_tmp) data_tmp = @"";
+    if(codeTextView != nil)
+        [self->codeTextView setString: data_tmp];
+    
+    [data_tmp release];
+    data_tmp = nil;
+    
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
 }
 
@@ -53,10 +68,22 @@
     // Insert code here to read your document from the given data of the specified type. If outError != NULL, ensure that you create and set an appropriate error when returning NO.
     // You can also choose to override -readFromFileWrapper:ofType:error: or -readFromURL:ofType:error: instead.
     // If you override either of these, you should also override -isEntireFileLoaded to return NO if the contents are lazily loaded.
-    if (outError) {
-        *outError = [NSError errorWithDomain:NSOSStatusErrorDomain code:unimpErr userInfo:nil];
+
+    BOOL readSuccess = NO;
+    NSAttributedString *fileContents = [[NSAttributedString alloc]
+                                        initWithData:data options:NULL documentAttributes:NULL
+                                        error:outError];
+    [fileContents autorelease];
+    
+    if (!fileContents && outError) {
+        *outError = [NSError errorWithDomain:NSCocoaErrorDomain
+                                        code:NSFileReadUnknownError userInfo:nil];
     }
-    return YES;
+    if (fileContents) {
+        readSuccess = YES;
+        data_tmp = [fileContents string];
+    }
+    return readSuccess;
 }
 
 + (BOOL)autosavesInPlace
@@ -67,13 +94,11 @@
 
 - (IBAction) runButtonListener: (id) sender
 {
-    //NSLog(@"CLICKED!");
-    if(glControllerWindow != nil){
-        [[glControllerWindow window]close];
-        [glControllerWindow release];
-    }
-    glControllerWindow = [[GLWindowController alloc] initWithWindowNibName:@"GLWindow"];
-    [glControllerWindow showWindow:self];
+    [self closeGLWindow];
+    
+    [cinderDrawingView callSetupNewLuaState];
+    
+    [gLWindow makeKeyAndOrderFront:nil];
 }
 
 - (IBAction) stopButtonListener: (id) sender
@@ -83,10 +108,10 @@
 
 - (void) closeGLWindow
 {
-    if(glControllerWindow != nil){
-        [glControllerWindow release];
-        glControllerWindow = nil;
-    }
+    if ( cinderDrawingView )
+        [cinderDrawingView clearLuaState];
+    if( gLWindow )
+        [gLWindow close];
 }
 
 @end
