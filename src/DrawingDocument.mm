@@ -24,11 +24,6 @@
     return self;
 }
 
--(void)dealloc
-{
-    [self closeGLWindow];
-    [super dealloc];
-}
 
 - (NSString *)windowNibName
 {
@@ -43,13 +38,6 @@
     
     //[aController setShouldCloseDocument: YES];
     
-    if(!data_tmp) data_tmp = @"";
-    if(codeTextView != nil)
-        [self->codeTextView setString: data_tmp];
-    
-    [data_tmp release];
-    data_tmp = nil;
-    
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
 }
 
@@ -57,10 +45,17 @@
 {
     // Insert code here to write your document to data of the specified type. If outError != NULL, ensure that you create and set an appropriate error when returning nil.
     // You can also choose to override -fileWrapperOfType:error:, -writeToURL:ofType:error:, or -writeToURL:ofType:forSaveOperation:originalContentsURL:error: instead.
-    if (outError) {
-        *outError = [NSError errorWithDomain:NSOSStatusErrorDomain code:unimpErr userInfo:nil];
+    NSData *data;
+    NSMutableDictionary *dict = [NSDictionary dictionaryWithObject:NSRTFTextDocumentType
+                                                            forKey:NSDocumentTypeDocumentAttribute];
+    [codeTextView breakUndoCoalescing];
+    data = [[codeTextView textStorage] dataFromRange:NSMakeRange(0, [[codeTextView textStorage] length])
+                    documentAttributes:dict error:outError];
+    if (!data && outError) {
+        *outError = [NSError errorWithDomain:NSCocoaErrorDomain
+                                        code:NSFileWriteUnknownError userInfo:nil];
     }
-    return nil;
+    return data;
 }
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
@@ -73,7 +68,7 @@
     NSAttributedString *fileContents = [[NSAttributedString alloc]
                                         initWithData:data options:NULL documentAttributes:NULL
                                         error:outError];
-    [fileContents autorelease];
+    //[fileContents autorelease];
     
     if (!fileContents && outError) {
         *outError = [NSError errorWithDomain:NSCocoaErrorDomain
@@ -95,6 +90,18 @@
 - (IBAction) runButtonListener: (id) sender
 {
     [self closeGLWindow];
+    
+    [cinderDrawingView setLuaMainPath: [[self fileURL] absoluteString]];
+   
+    //Here I need the URL of the file, not the actual data...
+    /*
+    if(!data_tmp) data_tmp = @"";
+    if(codeTextView != nil)
+        [self->codeTextView setString: data_tmp];
+    
+    [data_tmp release];
+    data_tmp = nil;
+    */
     
     [cinderDrawingView callSetupNewLuaState];
     
