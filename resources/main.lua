@@ -35,8 +35,8 @@ function draw()
     gl.popMatrices()
     
     if(time.seconds() - prevtime > 2) then
-        prevtime = time.seconds()
-        --print("YO ".. prevtime)
+      prevtime = time.seconds()
+      --print("YO ".. prevtime)
     end
 
 end

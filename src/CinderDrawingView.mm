@@ -36,9 +36,10 @@
     luaMan = new LuaManager();
 	
     // Recieve lua text file
-	string lua_path = [super getResourcePath:luaMainPath];//RES_MAIN_LUA
+	string lua_path = luaMainPath;//[super getResourcePath:luaMainPath];//RES_MAIN_LUA
     
     L = luaMan->loadLuaFile(lua_path.c_str());
+    if (L==NULL) return;
     
     // Add all my class and namespace bindings.
     luabindings::add_to_state(L);
@@ -47,6 +48,11 @@
     luabridge::push( L, luabindings::LuaWindow( 300, 300 ) ); //push a new instance of the window class
     lua_setglobal( L, "window" );
     //TODO: Make this window table immutable in lua by changing it's metamethods
+    
+    luabridge::push(L, luabindings::LuaApp(consoleOut));
+    lua_setglobal( L, "__CLAPP"); //hidden instance to this view, for printing.
+    
+    luaMan->dostring("print = function(message) __CLAPP:printToConsole(message) end");
     
     // Execute lua files in order
     luaMan->run();
@@ -57,10 +63,8 @@
         setupLua();
     }catch(luabridge::LuaException const& e){
         //TODO: skip this message
-        console()<<"Error running setup(). It's either undefined or broken."<<endl;
+        //console()<<"Error running setup(). It's either undefined or broken."<<endl;
     }
-    //TODO: change lua print function to pipe output to different function.
-    //lua_prompt_thread = std::thread(&MetatronsGrooveApp::lua_prompt,this);
     
     luabridge::LuaRef window = luabridge::getGlobal(L, "window");
     int newWidth = window["width"];
@@ -83,6 +87,9 @@
     
     //clear black to avoid artifacts.
     gl::clear();
+    
+    
+    appSetupCalled = true;
 }
 
 
@@ -93,11 +100,15 @@
 
 - (void) draw
 {
+    if(!appSetupCalled || L==NULL)return;
 	luabridge::LuaRef drawLua = luabridge::getGlobal(L,"draw");
     try{
         drawLua();
     }catch(luabridge::LuaException const& e){
-        console()<<e.what()<<std::endl;
+        luabridge::LuaRef print = luabridge::getGlobal(L,"print");
+        //TODO: user may override print, and this could bug out, careful!
+        print(e.what());
+        //console()<<e.what()<<std::endl;
         //TODO: stop looping if program reaches here.
     }
 }
@@ -160,17 +171,21 @@ void exit(){
 -(void) callSetupNewLuaState
 {
     [self setup];
-    appSetupCalled = true;
 }
 
 
--(void) setLuaMainPath:(NSString*) path
+-(void) setLuaMainPath:(const char*) path
 {
     if(path == nil){
         luaMainPath = RES_EMPTY_MAIN_LUA;
     }else{
-        luaMainPath = string([path cStringUsingEncoding:NSUTF8StringEncoding]);
+        luaMainPath = string( path );
     }
+}
+
+
+-(void) setConsoleOut:(NSTextView*)console{
+    consoleOut = console;
 }
 
 @end

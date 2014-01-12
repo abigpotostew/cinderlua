@@ -116,6 +116,12 @@ void luabindings::add_to_state(lua_State* L){
         .addFunction("size", &LuaWindow::size)
     .endClass();
     
+    luabridge::getGlobalNamespace(L)
+    .beginClass<LuaApp>("__CLApp")
+    .addConstructor<void(*)(void)>()
+        .addFunction("printToConsole", &LuaApp::print_to_console_pipe)
+    .endClass();
+    
     //LuaRef v2 = getGlobal (L, "print")
     
     luabridge::getGlobalNamespace(L)

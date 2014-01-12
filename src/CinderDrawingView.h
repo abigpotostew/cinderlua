@@ -25,7 +25,7 @@
     lua_State* L;
     
     string luaMainPath;
-    
+    NSTextView* consoleOut;
 }
 
 -(void)close_state;
@@ -38,7 +38,9 @@
 //call setup with the next event loop.
 -(void) callSetupNewLuaState;
 
--(void) setLuaMainPath:(NSString*)path;
+-(void) setLuaMainPath:(const char*)path;
+
+-(void) setConsoleOut:(NSTextView*)console;
 
 @end
 

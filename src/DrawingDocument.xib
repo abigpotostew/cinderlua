@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="cinderDrawingView" destination="aWo-m6-bSM" id="Mu2-gD-Lbg"/>
                 <outlet property="codeTextView" destination="bf6-kC-DsC" id="cdV-3O-WKn"/>
+                <outlet property="consoleTextView" destination="7nO-we-ujv" id="nas-RA-hdt"/>
                 <outlet property="gLWindow" destination="OOi-Pp-Lgn" id="ygg-jp-MEz"/>
                 <outlet property="runButton" destination="M7M-CT-lA2" id="s00-bD-blO"/>
                 <outlet property="stopButton" destination="koL-ne-rtk" id="Wit-Ka-kAa"/>
@@ -33,7 +34,7 @@
                             <rect key="frame" x="1" y="1" width="553" height="318"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <textView ambiguous="YES" importsGraphics="NO" richText="NO" findStyle="bar" incrementalSearchingEnabled="YES" allowsUndo="YES" usesRuler="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="bf6-kC-DsC">
+                                <textView ambiguous="YES" importsGraphics="NO" richText="NO" findStyle="bar" incrementalSearchingEnabled="YES" allowsUndo="YES" usesRuler="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" smartInsertDelete="YES" id="bf6-kC-DsC">
                                     <rect key="frame" x="0.0" y="0.0" width="553" height="318"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -65,10 +66,6 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
-                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bwp-sS-Z1a" customClass="ConsolePipe">
-                        <rect key="frame" x="0.0" y="0.0" width="570" height="161"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    </customView>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M7M-CT-lA2">
                         <rect key="frame" x="-6" y="472" width="294" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -91,6 +88,35 @@
                             <action selector="stopButtonListener:" target="-2" id="PFb-7D-eoY"/>
                         </connections>
                     </button>
+                    <scrollView fixedFrame="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LyP-Py-Z8S">
+                        <rect key="frame" x="-1" y="-1" width="571" height="153"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <clipView key="contentView" ambiguous="YES" misplaced="YES" id="iSy-ky-aMM">
+                            <rect key="frame" x="1" y="1" width="554" height="151"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <textView ambiguous="YES" importsGraphics="NO" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="7nO-we-ujv">
+                                    <rect key="frame" x="0.0" y="0.0" width="554" height="151"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <size key="minSize" width="554" height="151"/>
+                                    <size key="maxSize" width="571" height="10000000"/>
+                                    <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    <size key="minSize" width="554" height="151"/>
+                                    <size key="maxSize" width="571" height="10000000"/>
+                                </textView>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </clipView>
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="guP-AR-xdZ">
+                            <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="Ibt-Db-s9G">
+                            <rect key="frame" x="555" y="1" width="15" height="151"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                    </scrollView>
                 </subviews>
             </view>
             <connections>

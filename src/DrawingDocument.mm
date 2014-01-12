@@ -39,6 +39,15 @@
     //[aController setShouldCloseDocument: YES];
     
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
+    
+    if(!data_tmp) data_tmp = @"";
+    if(codeTextView != nil)
+        [self->codeTextView setString: data_tmp];
+    
+    [cinderDrawingView setConsoleOut: consoleTextView];
+    
+    [data_tmp release];
+    data_tmp = nil;
 }
 
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError
@@ -46,7 +55,7 @@
     // Insert code here to write your document to data of the specified type. If outError != NULL, ensure that you create and set an appropriate error when returning nil.
     // You can also choose to override -fileWrapperOfType:error:, -writeToURL:ofType:error:, or -writeToURL:ofType:forSaveOperation:originalContentsURL:error: instead.
     NSData *data;
-    NSMutableDictionary *dict = [NSDictionary dictionaryWithObject:NSRTFTextDocumentType
+    NSMutableDictionary *dict = [NSDictionary dictionaryWithObject:NSPlainTextDocumentType //NSRTFTextDocumentType
                                                             forKey:NSDocumentTypeDocumentAttribute];
     [codeTextView breakUndoCoalescing];
     data = [[codeTextView textStorage] dataFromRange:NSMakeRange(0, [[codeTextView textStorage] length])
@@ -65,18 +74,19 @@
     // If you override either of these, you should also override -isEntireFileLoaded to return NO if the contents are lazily loaded.
 
     BOOL readSuccess = NO;
-    NSAttributedString *fileContents = [[NSAttributedString alloc]
-                                        initWithData:data options:NULL documentAttributes:NULL
-                                        error:outError];
+    //NSAttributedString *fileContents = [[NSAttributedString alloc]
+    //                                    initWithData:data options:NULL documentAttributes:NULL
+    //                                    error:outError];
+    NSString* fileData = [[NSString alloc] initWithData:data encoding:[NSString defaultCStringEncoding] ];
     //[fileContents autorelease];
     
-    if (!fileContents && outError) {
+    if (!fileData && outError) {
         *outError = [NSError errorWithDomain:NSCocoaErrorDomain
                                         code:NSFileReadUnknownError userInfo:nil];
     }
-    if (fileContents) {
+    if (fileData) {
         readSuccess = YES;
-        data_tmp = [fileContents string];
+        data_tmp = fileData;
     }
     return readSuccess;
 }
@@ -91,19 +101,15 @@
 {
     [self closeGLWindow];
     
-    [cinderDrawingView setLuaMainPath: [[self fileURL] absoluteString]];
-   
-    //Here I need the URL of the file, not the actual data...
-    /*
-    if(!data_tmp) data_tmp = @"";
-    if(codeTextView != nil)
-        [self->codeTextView setString: data_tmp];
-    
-    [data_tmp release];
-    data_tmp = nil;
-    */
+    const char* f_url = [[self fileURL] fileSystemRepresentation]; //10.9+ only
+    [cinderDrawingView setLuaMainPath: f_url];
     
     [cinderDrawingView callSetupNewLuaState];
+    
+    //clear console
+    [[consoleTextView textStorage] replaceCharactersInRange:
+                                        NSMakeRange(0, [[consoleTextView textStorage] length])
+                                   withString:@""];
     
     [gLWindow makeKeyAndOrderFront:nil];
 }

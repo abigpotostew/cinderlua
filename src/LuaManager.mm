@@ -18,8 +18,7 @@ LuaManager::LuaManager(){
 }
 
 LuaManager::~LuaManager(){
-    if(this->L)
-        close_state();
+    close_state();
 }
 
 lua_State* LuaManager::loadLuaFile(const char* luaPath){
@@ -60,6 +59,7 @@ lua_State* LuaManager::run(){
 
 
 void LuaManager::close_state(){
+    if(L == NULL) return;
     lua_close(this->L);
     L = NULL;
 }

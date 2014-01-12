@@ -19,6 +19,8 @@
     IBOutlet NSWindow* gLWindow;
     IBOutlet CinderDrawingView *cinderDrawingView;
     
+    IBOutlet NSTextView* consoleTextView;
+    
     //GLWindowController* glControllerWindow;
     
     NSString* data_tmp;
